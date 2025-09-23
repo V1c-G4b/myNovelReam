@@ -1,0 +1,11 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: mynovelream-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: docker
+      POSTGRES_PASSWORD: docker
+      POSTGRES_DB: mynovelream
+    ports:
+      - "5432:5432"
