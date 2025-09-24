@@ -1,5 +1,5 @@
 import { GetUserByIdUseCase } from "@/application/use-cases/user/get-user-by-id-use-case";
-import { UserRepositoryImpl } from "@/infrastructure/persistence/repositories/user-repository-impl";
+import { UserRepositoryImpl } from "@/infrastructure/repositories/drizzle-user-repository";
 import { Elysia } from "elysia";
 import { z } from "zod";
 

@@ -2,7 +2,7 @@ import { cors } from "@elysiajs/cors";
 import { openapi } from "@elysiajs/openapi";
 import { Elysia } from "elysia";
 import { runMigrations } from "./infrastructure/db/run-migrations";
-import { userController } from "./infrastructure/http/controller/user-controller";
+import { userController } from "./interfaces/controllers/user-controller";
 import {
   betterAuthPlugin,
   OpenAPI,

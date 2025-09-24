@@ -21,7 +21,6 @@ export const chapterRoutes = new Elysia()
     async ({ params, body, user }) => {
       if (!user) throw new Error("Unauthorized");
 
-      // Normalize and validate `order` which may come as a string when using multipart/form-data
       const rawOrder: any = body.order;
       let parsedOrder: number | undefined = undefined;
 
@@ -49,7 +48,6 @@ export const chapterRoutes = new Elysia()
         novelId: params.novelId,
         title: body.title ?? "Untitled Chapter",
         file: body.file,
-        // Pass `undefined` when not provided so the use-case will compute the next order
         order: parsedOrder,
         userId: user.id,
       });
@@ -61,7 +59,6 @@ export const chapterRoutes = new Elysia()
       params: t.Object({
         novelId: t.String(),
       }),
-      // Accept order as number or string (multipart/form-data often sends values as strings)
       body: t.Object({
         title: t.Optional(t.String()),
         file: t.File(),
