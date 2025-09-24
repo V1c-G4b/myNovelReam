@@ -1,8 +1,8 @@
-import { Elysia, t } from "elysia";
-import { DrizzleNovelRepository } from "../../infrastructure/repositories/drizzle-novel.repository";
-import { LocalFileStorageAdapter } from "../../infrastructure/adapters/local-file-storage.adapter";
 import { CreateNovelUseCase } from "@/application/use-cases/novel/create-novel-use-case";
 import { betterAuthPlugin } from "@/infrastructure/http/plugins/better-auth";
+import { Elysia, t } from "elysia";
+import { LocalFileStorageAdapter } from "../../infrastructure/adapters/local-file-storage.adapter";
+import { DrizzleNovelRepository } from "../../infrastructure/repositories/drizzle-novel.repository";
 
 const novelRepo = new DrizzleNovelRepository();
 const fileStorage = new LocalFileStorageAdapter();
@@ -43,9 +43,9 @@ export const novelRoutes = new Elysia()
     }
   )
   .get(
-    "/novels/:id",
+    "/novels/:novelId",
     async ({ params }) => {
-      const novel = await novelRepo.findById(params.id);
+      const novel = await novelRepo.findById(params.novelId);
       if (!novel) {
         return { success: false, message: "Novel not found" };
       }
@@ -53,10 +53,23 @@ export const novelRoutes = new Elysia()
     },
     {
       params: t.Object({
-        id: t.String(),
+        novelId: t.String(),
       }),
       detail: {
         summary: "Get a novel by ID",
+        tags: ["Novel"],
+      },
+    }
+  )
+  .get(
+    "/novels",
+    async () => {
+      const novels = await novelRepo.getAll();
+      return { success: true, novels };
+    },
+    {
+      detail: {
+        summary: "Get all novels",
         tags: ["Novel"],
       },
     }

@@ -23,4 +23,8 @@ export const auth = betterAuth({
       maxAge: 60 * 5,
     },
   },
+  cookie: {
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+  },
 });

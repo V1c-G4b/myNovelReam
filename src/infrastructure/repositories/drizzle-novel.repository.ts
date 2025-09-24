@@ -5,6 +5,22 @@ import { eq } from "drizzle-orm";
 import { db } from "../db/client";
 
 export class DrizzleNovelRepository implements NovelRepository {
+  async getAll(): Promise<Novel[]> {
+    const results = await db.select().from(novelsTable);
+    return results.map(
+      (r) =>
+        new Novel(
+          r.id,
+          r.title,
+          r.description ?? "",
+          r.authorId,
+          r.genres ?? [],
+          r.coverImagePath ?? "",
+          r.createdAt,
+          r.updatedAt
+        )
+    );
+  }
   async create(novel: Novel): Promise<Novel> {
     const [inserted] = await db
       .insert(novelsTable)
@@ -23,8 +39,8 @@ export class DrizzleNovelRepository implements NovelRepository {
     return new Novel(
       inserted.id,
       inserted.title,
-      inserted.authorId,
       inserted.description ?? "",
+      inserted.authorId,
       inserted.genres ?? [],
       inserted.coverImagePath ?? "",
       inserted.createdAt,
@@ -42,8 +58,8 @@ export class DrizzleNovelRepository implements NovelRepository {
     return new Novel(
       r.id,
       r.title,
-      r.authorId,
       r.description ?? "",
+      r.authorId,
       r.genres ?? [],
       r.coverImagePath ?? "",
       r.createdAt,

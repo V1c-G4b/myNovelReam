@@ -16,6 +16,6 @@ export class Chapter {
   validate() {
     if (!this.title) throw new Error("Title is required");
     if (!["pdf", "doc", "docx"].includes(this.fileType))
-      throw new Error("Invalid file type");
+      throw new Error("Invalid file type" + this.fileType);
   }
 }

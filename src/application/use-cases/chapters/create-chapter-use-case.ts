@@ -2,6 +2,7 @@ import { FileStorageAdapter } from "@/domain/adapters/file-storage.adapter";
 import { Chapter } from "@/domain/entities/chapter.entity";
 import { ChapterRepository } from "@/domain/repositories/chapter.repository";
 import { NovelRepository } from "@/domain/repositories/novel.repository";
+import { file } from "bun";
 
 export class CreateChapterUseCase {
   constructor(
@@ -14,14 +15,19 @@ export class CreateChapterUseCase {
     novelId: string;
     title: string;
     file: File;
-    order: number;
+    order?: number;
     userId: string;
   }) {
     const novel = await this.novelRepo.findById(input.novelId);
 
     if (!novel) throw new Error("Novel not found");
     if (novel.authorId !== input.userId)
-      throw new Error("You are not the author of this novel");
+      throw new Error(
+        "You are not the author of this novel - " +
+          input.userId +
+          " | " +
+          novel.authorId
+      );
 
     const { filePath, fileSize, fileType } = await this.fileStorage.upload(
       input.file,
@@ -30,7 +36,9 @@ export class CreateChapterUseCase {
 
     const existingChapter = await this.chapterRepo.findByNovelId(input.novelId);
     const nextOrder =
-      input.order ?? Math.max(...existingChapter.map((c) => c.order), 0) + 1;
+      input.order !== undefined
+        ? input.order
+        : Math.max(...existingChapter.map((c) => c.order), 0) + 1;
 
     const chapter = new Chapter(
       crypto.randomUUID(),
@@ -39,7 +47,7 @@ export class CreateChapterUseCase {
       filePath,
       fileType,
       fileSize,
-      nextOrder
+      nextOrder ?? 0
     );
 
     chapter.validate();

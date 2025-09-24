@@ -9,7 +9,7 @@ export class LocalFileStorageAdapter implements FileStorageAdapter {
   ): Promise<{ filePath: string; fileSize: number; fileType: string }> {
     const ext = path.extname(file.name).slice(1);
 
-    if (!["png", "jpg", "jpeg", "gif"].includes(ext))
+    if (!["png", "jpg", "jpeg", "gif", "pdf", "doc", "docx"].includes(ext))
       throw new Error("Invalid file type");
 
     const fileName = `${crypto.randomUUID()}.${ext}`;
